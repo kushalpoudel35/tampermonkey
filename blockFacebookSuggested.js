@@ -23,7 +23,6 @@
 
     // Run the script periodically
     const observer = new MutationObserver(() => {
-        removeTwitterAds();
         removeFacebookAds();
     });
 
