@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      0.3
 // @description  Hides suggested and sponsored posts on Facebook's home feed.
-// @author       You
+// @author       Kushal Poudel
 // @match        https://www.facebook.com/*
 // @grant        none
 // ==/UserScript==
