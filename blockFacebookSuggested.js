@@ -1,30 +1,42 @@
 // ==UserScript==
-// @name         Remove Promoted Posts & Suggestions
+// @name         Facebook Suggested & Sponsored Post Blocker
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Hide promoted posts and suggested content on Twitter and Facebook
-// @author       Kushal Poudel
+// @version      0.3
+// @description  Hides suggested and sponsored posts on Facebook's home feed.
+// @author       You
 // @match        https://www.facebook.com/*
 // @grant        none
 // ==/UserScript==
 
-(function () {
+(function() {
     'use strict';
 
-    // Facebook: Remove "Suggested for you" and ads
-    const removeFacebookAds = () => {
-        const posts = document.querySelectorAll('[role="article"]');
-        posts.forEach((post) => {
-            if (post.innerText.includes('Suggested for you') || post.innerText.includes('Sponsored')) {
-                post.style.display = 'none';
+    // Function to hide elements matching the given selector
+    function hideElements(selector) {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(element => {
+            element.style.display = 'none';
+        });
+    }
+
+    // Hide suggested posts
+    hideElements('div[data-testid="story"] [data-testid="suggested_post"]');
+
+    // Hide sponsored posts
+    hideElements('div[data-testid="story"] [data-testid="ad_unit"]');
+
+    // Observe changes to the DOM and re-apply the hiding logic
+    const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+            if (mutation.type === 'childList') {
+                hideElements('div[data-testid="story"] [data-testid="suggested_post"]');
+                hideElements('div[data-testid="story"] [data-testid="ad_unit"]');
             }
         });
-    };
-
-    // Run the script periodically
-    const observer = new MutationObserver(() => {
-        removeFacebookAds();
     });
 
-    observer.observe(document.body, { childList: true, subtree: true });
+    // Observe the main content area for changes
+    const targetNode = document.querySelector('div[role="feed"]');
+    const config = { childList: true, subtree: true };
+    observer.observe(targetNode, config);
 })();
